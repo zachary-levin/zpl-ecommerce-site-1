@@ -6,23 +6,64 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // get all products
 router.get('/', (req, res) => {
   // find all products
+  Product.findAll({
+    include: [Category, Tag]
+  })
+  .then(dbProductData => res.json(dbProductData))
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
   // be sure to include its associated Category and Tag data
 });
 
 // get one product
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
+  Product.findOne({
+    where: {
+      id: req.params.id
+      //category_name: req.body.category_name
+    },
+    include: [
+      {
+        model: Category,
+        attributes: ['id', 'category_name']
+      },
+      {
+        model: Tag,
+        through: ProductTag,
+        attributes: ['id', 'tag_name']
+      }
+      // TO-DO: Fix bug involving testing GET One Product with "http://localhost:3001/api/products/:id" path giving SequelizeEagerLoadingError
+
+
+  ]
+  })
+  .then(dbProductData => {
+    if (!dbProductData) {
+      res.status(404).json({ message: 'No product found with this id!' });
+      return;
+    }
+    res.json(dbProductData);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
   // be sure to include its associated Category and Tag data
 });
 
 // create new product
 router.post('/', (req, res) => {
   /* req.body should look like this...
+  Put example body below in Insomnia POST test
     {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
+      "product_name": "Basketball",
+      "price": 200.00,
+      "stock": 3,
+      "tagIds": [1, 2, 3, 4],
+      "category_id": 1
     }
   */
   Product.create(req.body)
@@ -91,6 +132,22 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(dbProductData => {
+      if (!dbProductData) {
+        res.status(404).json({ message: 'No product found with this id! '});
+        return;
+      }
+      res.json(dbProductData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
