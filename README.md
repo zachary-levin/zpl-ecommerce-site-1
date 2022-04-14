@@ -36,18 +36,16 @@ THEN I am able to successfully create, update, and delete data in my database
   If your README is long, add a table of contents to make it easy for users to find what they need.
   
   - [Description](#description)
+  - [Usage](#usage)
   - [Credits](#credits)
   - [License](#license)
 
 
   ## Usage
 
-  Provide instructions and examples for use. Include screenshots as needed.
-  
-  To add a screenshot, create an assets/images folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
-
-  md
   ![Application Preview](screenshot.png)
+  [Demonstration Video Part 1](https://youtu.be/ZSiBs5xjziE)
+  [Demonstration Video Part 2](https://youtu.be/CmgOxBevQso)
   
   ## Credits
   
